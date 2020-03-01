@@ -1,0 +1,6 @@
+{
+    "editor.formatOnSave": true,
+    "eslint.debug": true,
+    "eslint.onIgnoredFiles": "warn",
+    "eslint.alwaysShowStatus": true
+}
