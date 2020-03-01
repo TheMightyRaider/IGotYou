@@ -1,7 +1,25 @@
 <html>
+  <head>
+    <style>
+      .image {
+        width: 750px;
+        height: 500px;
+        padding: 10px;
+      }
+    </style>
+  </head>
   <body>
-    <form>
-      <input type="file" name="uploadFile" />
-    </form>
+    <input
+      type="file"
+      name="uploadFile"
+      accept=".png,.jpg"
+      multiple
+      onchange="displayitem()"
+    /><br /><br />
+    <div class="fileName"></div>
+    <button name="submit">Upload</button>
+    <div class=" preview"></div>
+
+    <script src="script.js"></script>
   </body>
 </html>
