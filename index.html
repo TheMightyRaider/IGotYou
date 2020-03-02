@@ -6,20 +6,47 @@
         height: 500px;
         padding: 10px;
       }
+      .dropbox {
+        width: 350px;
+        height: 150px;
+        border-style: solid;
+        margin: 50px;
+        text-align: center;
+        padding: 10px;
+      }
+      .container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        width: 500px;
+        height: 500px;
+        padding: 10px;
+      }
     </style>
   </head>
   <body>
-    <input
-      type="file"
-      name="uploadFile"
-      accept=".png,.jpg"
-      multiple
-      onchange="displayitem()"
-    /><br /><br />
-    <div class="fileName"></div>
-    <button name="submit">Upload</button>
-    <div class=" preview"></div>
-
+    <div class="container">
+      <div class="main">
+        <input
+          type="file"
+          name="uploadFile"
+          accept=".png,.jpg"
+          multiple
+          onchange="displayitem()"
+        /><br /><br />
+        <div class="fileName">
+          <p class="header"></p>
+        </div>
+        <button name="submit">Upload</button>
+        <div class="dropbox">
+          <p>DROP IT HERE!</p>
+        </div>
+        <div class=" preview"></div>
+      </div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
