@@ -1,6 +1,7 @@
 const lib = (function() {
   //IIFE
   function appendImage(file) {
+    document.querySelector(".previewHeader").innerHTML = "PREVIEW";
     const preview = document.querySelector(".preview");
     const img = document.createElement("img");
     const imageURL = URL.createObjectURL(file);
@@ -10,6 +11,7 @@ const lib = (function() {
   }
 
   function appendFileName(fileName) {
+    document.querySelectorAll(".image").forEach(item => item.remove());
     const header = document.querySelector(".header");
     let fileNameContainer = document.querySelector(".fileName");
     header.innerHTML = "<b>Files to be Uploaded</b>";

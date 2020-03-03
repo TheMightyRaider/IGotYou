@@ -1,8 +1,6 @@
 const input = document.querySelector('input[name="uploadFile"]');
 const fileDetails = input.files;
-let fileCollection = [];
 let fileList = [];
-let itemToBeDisplayed = [];
 
 function displayImage() {
   lib.clearFileNames();
@@ -11,6 +9,7 @@ function displayImage() {
     lib.appendImage(file);
   }
   fileList = [];
+  console.log(fileList);
 }
 
 function checkDuplicate(file) {
