@@ -69,7 +69,8 @@ function restoreImageOnReload() {
 
 function removeImage(event) {
   helper.checkToRemoveHeader(event);
-  newimage = image.filter(file => file.name != event.target.classList[0]);
+  const filename = event.target.dataset.filename;
+  newimage = image.filter(file => file.name != filename);
   image = newimage;
   storeInLocalStorage();
   event.target.remove();
@@ -91,6 +92,7 @@ function removeFilefromUploadList(event) {
 function previewImage() {
   helper.clearPreviewBox();
   fileToBeUploadedList.forEach(async file => {
+    event.target.dataset.filename;
     const base64 = await toBase64(file);
     helper.generatePreviewImage(base64);
   });

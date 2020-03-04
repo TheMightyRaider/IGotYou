@@ -26,7 +26,7 @@ const helper = (function() {
 
   function restoreImage(file) {
     const img = document.createElement("img");
-    img.classList.add(`${file.name}`);
+    img.dataset.filename = file.name;
     img.src = file.base64;
     displayImage.insertAdjacentElement("beforeend", img);
     img.addEventListener("click", removeImage);
@@ -40,6 +40,7 @@ const helper = (function() {
 
   function checkToRemoveHeader(event) {
     if (
+      // Could have used image array
       !event.target.nextSibling &&
       event.target.previousSibling.nodeType == Node.TEXT_NODE
     ) {

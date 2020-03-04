@@ -37,10 +37,10 @@ const lib = (function() {
   function addDropHandler(handler) {
     const dropBox = document.querySelector(".dropbox");
     ["dragenter", "dragover", "drop"].forEach(item => {
-      dropBox.addEventListener(item, stopDefaults, false);
+      dropBox.addEventListener(item, stopDefaults);
     });
 
-    dropBox.addEventListener("drop", handler, false);
+    dropBox.addEventListener("drop", handler);
   }
 
   //   function getButton(){
