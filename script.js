@@ -9,16 +9,7 @@
 
 */
 
-const button = document.querySelector("button");
-const fileDetails = document.querySelector("input[name='files']").files;
-const header = document.querySelector(".header");
-const preview = document.querySelector("ul");
-const displayImage = document.querySelector(".onload");
-const removeHeader = document.querySelector(".removeHeader");
-const previewBox = document.querySelector(".images");
-const uploadedHeader = document.querySelector(".uploadedHeader");
 let fileToBeUploadedList = [];
-let storageFile = [];
 let image = [];
 let state;
 
@@ -31,7 +22,7 @@ function toBase64(file) {
   });
 }
 
-async function handler(event) {
+async function onFileSelect(event) {
   const files = event.target.files;
   for (const file of files) {
     const isDuplicateFile = checkDuplicate(fileToBeUploadedList, file.name);
@@ -46,38 +37,17 @@ async function handler(event) {
       !checkDuplicateinLocalStorage ? image.push(imgobj) : null;
     }
   }
-  clearFileName();
-  displayName();
+  helper.clearFileName();
+  helper.displayName(fileToBeUploadedList);
 }
 
 function checkDuplicate(folder, file) {
   return folder.map(item => item.name).includes(file);
 }
 
-function clearFileName() {
-  document.querySelector("input[name='files']").value = "";
-  document.querySelector(".header").innerHTML = "";
-  document.querySelector("ul").innerHTML = "";
-  return;
-  //   displayName();
-}
-
-function displayName() {
-  fileToBeUploadedList.length > 0
-    ? (header.innerHTML = "<b>File Selected</b>")
-    : null;
-  fileToBeUploadedList.forEach(file => {
-    html = `
-          <li class='fileName'>${file.name}<button class='remove' id='${file.name}'>Remove</button></li>
-          <br>
-      `;
-    preview.innerHTML += html;
-  });
-}
-
 function storeInLocalStorage() {
   // displayImage.innerHTML = "";
-  clearFileName();
+  helper.clearFileName();
   localStorage.setItem("FilesObject", JSON.stringify(image));
   console.log("Stored in LS");
 }
@@ -85,40 +55,27 @@ function storeInLocalStorage() {
 function restoreSession() {
   state = JSON.parse(localStorage.getItem("FilesObject"));
   if (state) {
-    appendImage();
+    restoreImageOnReload();
   }
 }
 
-function appendImage() {
-  console.log("working");
-  state.length > 0
-    ? (removeHeader.innerHTML = "<b>Click the Image to remove it!</b>")
-    : null;
+function restoreImageOnReload() {
+  helper.displayHeader(state);
   state.forEach(file => {
-    const img = document.createElement("img");
-    img.classList.add(`${file.name}`);
-    img.src = file.base64;
-    displayImage.insertAdjacentElement("beforeend", img);
-    img.addEventListener("click", removeImage);
+    helper.restoreImage(file);
     image.push(file);
   });
 }
 
 function removeImage(event) {
-  if (
-    !event.target.nextSibling &&
-    event.target.previousSibling.nodeType == Node.TEXT_NODE
-  ) {
-    removeHeader.innerHTML = "";
-  }
-
+  helper.checkToRemoveHeader(event);
   newimage = image.filter(file => file.name != event.target.classList[0]);
   image = newimage;
   storeInLocalStorage();
   event.target.remove();
 }
 
-function removeFile(event) {
+function removeFilefromUploadList(event) {
   const index = fileToBeUploadedList.findIndex(
     file => file.name == event.target.id
   );
@@ -127,25 +84,17 @@ function removeFile(event) {
     file => file.name != event.target.id
   );
   fileToBeUploadedList = newFileList;
-  clearFileName();
-  displayName();
+  helper.clearFileName();
+  helper.displayName(fileToBeUploadedList);
 }
 
 function previewImage() {
-  uploadedHeader.innerHTML = "";
-  previewBox.querySelectorAll("img").forEach(item => item.remove());
-  uploadedHeader.innerHTML = "Uploaded !";
+  helper.clearPreviewBox();
   fileToBeUploadedList.forEach(async file => {
-    const img = document.createElement("img");
     const base64 = await toBase64(file);
-    img.src = base64;
-    console.log(img);
-    previewBox.insertAdjacentElement("beforeend", img);
+    helper.generatePreviewImage(base64);
   });
   fileToBeUploadedList = [];
 }
-
-button.addEventListener("click", storeInLocalStorage);
-button.addEventListener("click", previewImage);
-preview.addEventListener("click", removeFile);
+helper.addListener();
 restoreSession();
