@@ -5,6 +5,7 @@
         update the image array when the user remove a file.
         Store the filedetails in the localstorage
         on refresh display the image and provide a option delete to remove the image from dom and localstorage
+        Add remove feature to remove the image after reload.
 
 */
 
@@ -13,6 +14,7 @@ const fileDetails = document.querySelector("input[name='files']").files;
 const header = document.querySelector(".header");
 const preview = document.querySelector("ul");
 const displayImage = document.querySelector(".onload");
+const removeHeader = document.querySelector(".removeHeader");
 let fileToBeUploadedList = [];
 let uniqueFile = [];
 let image = [];
@@ -54,7 +56,9 @@ function clearFileName() {
 }
 
 function displayName() {
-  header.innerHTML = "<b>File Selected</b>";
+  fileToBeUploadedList.length > 0
+    ? (header.innerHTML = "<b>File Selected</b>")
+    : null;
   fileToBeUploadedList.forEach(file => {
     html = `
           <li class='fileName'>${file.name}<button class='remove' id='${file.name}'>Remove</button></li>
@@ -79,21 +83,31 @@ function restoreSession() {
 
 function appendImage() {
   console.log("working");
+  removeHeader.innerHTML = "<b>Click the Image to remove it!</b>";
   state.forEach(file => {
     const img = document.createElement("img");
     img.classList.add("img");
     img.src = file;
-    displayImage.append(img);
+    displayImage.insertAdjacentElement("beforeend", img);
+    img.addEventListener("click", removeImage);
   });
 }
 
+function removeImage(event) {
+  if (
+    !event.target.nextSibling &&
+    event.target.previousSibling.nodeType == Node.TEXT_NODE
+  ) {
+    removeHeader.innerHTML = "";
+  }
+  event.target.remove();
+}
+
 function removeFile(event) {
-  console.log(fileToBeUploadedList);
   const index = fileToBeUploadedList.findIndex(
     file => file.name == event.target.id
   );
   image.splice(index, 1);
-  console.log(image);
   const newFileList = fileToBeUploadedList.filter(
     file => file.name != event.target.id
   );
