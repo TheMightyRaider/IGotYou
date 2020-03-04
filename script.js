@@ -15,8 +15,10 @@ const header = document.querySelector(".header");
 const preview = document.querySelector("ul");
 const displayImage = document.querySelector(".onload");
 const removeHeader = document.querySelector(".removeHeader");
+const previewBox = document.querySelector(".images");
+const uploadedHeader = document.querySelector(".uploadedHeader");
 let fileToBeUploadedList = [];
-let uniqueFile = [];
+let storageFile = [];
 let image = [];
 let state;
 
@@ -32,19 +34,24 @@ function toBase64(file) {
 async function handler(event) {
   const files = event.target.files;
   for (const file of files) {
-    const isDuplicateFile = checkDuplicate(file.name);
+    const isDuplicateFile = checkDuplicate(fileToBeUploadedList, file.name);
     if (!isDuplicateFile) {
       fileToBeUploadedList.push(file);
       objtobase64 = await toBase64(file);
-      image.push(objtobase64);
+      imgobj = {
+        name: file.name,
+        base64: objtobase64
+      };
+      const checkDuplicateinLocalStorage = checkDuplicate(image, file.name);
+      !checkDuplicateinLocalStorage ? image.push(imgobj) : null;
     }
   }
   clearFileName();
   displayName();
 }
 
-function checkDuplicate(file) {
-  return fileToBeUploadedList.map(item => item.name).includes(file);
+function checkDuplicate(folder, file) {
+  return folder.map(item => item.name).includes(file);
 }
 
 function clearFileName() {
@@ -69,6 +76,7 @@ function displayName() {
 }
 
 function storeInLocalStorage() {
+  // displayImage.innerHTML = "";
   clearFileName();
   localStorage.setItem("FilesObject", JSON.stringify(image));
   console.log("Stored in LS");
@@ -83,13 +91,16 @@ function restoreSession() {
 
 function appendImage() {
   console.log("working");
-  removeHeader.innerHTML = "<b>Click the Image to remove it!</b>";
+  state.length > 0
+    ? (removeHeader.innerHTML = "<b>Click the Image to remove it!</b>")
+    : null;
   state.forEach(file => {
     const img = document.createElement("img");
-    img.classList.add("img");
-    img.src = file;
+    img.classList.add(`${file.name}`);
+    img.src = file.base64;
     displayImage.insertAdjacentElement("beforeend", img);
     img.addEventListener("click", removeImage);
+    image.push(file);
   });
 }
 
@@ -100,6 +111,10 @@ function removeImage(event) {
   ) {
     removeHeader.innerHTML = "";
   }
+
+  newimage = image.filter(file => file.name != event.target.classList[0]);
+  image = newimage;
+  storeInLocalStorage();
   event.target.remove();
 }
 
@@ -116,6 +131,21 @@ function removeFile(event) {
   displayName();
 }
 
+function previewImage() {
+  uploadedHeader.innerHTML = "";
+  previewBox.querySelectorAll("img").forEach(item => item.remove());
+  uploadedHeader.innerHTML = "Uploaded !";
+  fileToBeUploadedList.forEach(async file => {
+    const img = document.createElement("img");
+    const base64 = await toBase64(file);
+    img.src = base64;
+    console.log(img);
+    previewBox.insertAdjacentElement("beforeend", img);
+  });
+  fileToBeUploadedList = [];
+}
+
 button.addEventListener("click", storeInLocalStorage);
+button.addEventListener("click", previewImage);
 preview.addEventListener("click", removeFile);
 restoreSession();
