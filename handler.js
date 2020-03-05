@@ -1,8 +1,10 @@
 const helper = (function() {
+  const button = document.querySelector("button");
   const preview = document.querySelector("ul");
   const header = document.querySelector(".header");
   const displayImage = document.querySelector(".onload");
   const removeHeader = document.querySelector(".removeHeader");
+  button.disabled = true;
 
   function clearFileName() {
     document.querySelector("input[name='files']").value = "";
@@ -12,6 +14,7 @@ const helper = (function() {
   }
 
   function displayName(fileToBeUploadedList) {
+    console.log("working");
     fileToBeUploadedList.length > 0
       ? (header.innerHTML = "<b>File Selected</b>")
       : null;
@@ -22,14 +25,18 @@ const helper = (function() {
         `;
       preview.innerHTML += html;
     });
+    button.disabled = false;
   }
 
-  function restoreImage(file) {
+  function restoreImage(file, callingFunction, base64 = null) {
+    console.log(file.base64);
     const img = document.createElement("img");
     img.dataset.filename = file.name;
-    img.src = file.base64;
+    img.src = file.base64 ? file.base64 : base64;
     displayImage.insertAdjacentElement("beforeend", img);
-    img.addEventListener("click", removeImage);
+    callingFunction == "loadimageonreload"
+      ? img.addEventListener("click", removeImage)
+      : null;
   }
 
   function displayHeader(state) {
@@ -38,36 +45,35 @@ const helper = (function() {
       : null;
   }
 
-  function checkToRemoveHeader(event) {
+  function checkToRemoveHeader(savedImage) {
+    console.log(image);
     if (
+      savedImage.length == 1
       // Could have used image array
-      !event.target.nextSibling &&
-      event.target.previousSibling.nodeType == Node.TEXT_NODE
+      // !event.target.nextSibling &&
+      // event.target.previousSibling.nodeType == Node.TEXT_NODE
     ) {
       removeHeader.innerHTML = "";
     }
   }
 
-  function generatePreviewImage(src) {
-    const img = document.createElement("img");
-    img.src = src;
-    document.querySelector(".images").insertAdjacentElement("beforeend", img);
-  }
-
   function clearPreviewBox() {
     document
-      .querySelector(".images")
+      .querySelector(".onload")
       .querySelectorAll("img")
       .forEach(item => item.remove());
-    document.querySelector(".uploadedHeader").innerHTML = "Uploaded !";
+    removeHeader.innerHTML = "Uploaded!";
+    button.disabled = true;
   }
 
   function addListener() {
-    const button = document.querySelector("button");
-
     button.addEventListener("click", storeInLocalStorage);
     button.addEventListener("click", previewImage);
     preview.addEventListener("click", removeFilefromUploadList);
+  }
+
+  function exceededStorageCapcity() {
+    displayImage.innerHTML = "Upload Failed! Storage Exceed!";
   }
   return {
     clearFileName,
@@ -75,8 +81,8 @@ const helper = (function() {
     restoreImage,
     checkToRemoveHeader,
     displayHeader,
-    generatePreviewImage,
     clearPreviewBox,
-    addListener
+    addListener,
+    exceededStorageCapcity
   };
 })();

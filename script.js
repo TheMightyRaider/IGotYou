@@ -12,6 +12,7 @@
 let fileToBeUploadedList = [];
 let image = [];
 let state;
+let savedImage = [];
 
 function toBase64(file) {
   return new Promise((resolve, reject) => {
@@ -33,9 +34,9 @@ async function onFileSelect(event) {
         name: file.name,
         base64: objtobase64
       };
-      const checkDuplicateinLocalStorage = checkDuplicate(image, file.name);
-      !checkDuplicateinLocalStorage ? image.push(imgobj) : null;
     }
+    const checkDuplicateinLocalStorage = checkDuplicate(image, file.name);
+    !checkDuplicateinLocalStorage ? image.push(imgobj) : null;
   }
   helper.clearFileName();
   helper.displayName(fileToBeUploadedList);
@@ -48,7 +49,12 @@ function checkDuplicate(folder, file) {
 function storeInLocalStorage() {
   // displayImage.innerHTML = "";
   helper.clearFileName();
-  localStorage.setItem("FilesObject", JSON.stringify(image));
+  try {
+    localStorage.setItem("FilesObject", JSON.stringify(image));
+  } catch (err) {
+    helper.exceededStorageCapcity;
+  }
+
   console.log("Stored in LS");
 }
 
@@ -62,25 +68,25 @@ function restoreSession() {
 function restoreImageOnReload() {
   helper.displayHeader(state);
   state.forEach(file => {
-    helper.restoreImage(file);
-    image.push(file);
+    helper.restoreImage(file, "loadimageonreload");
+    savedImage.push(file);
   });
 }
 
 function removeImage(event) {
-  helper.checkToRemoveHeader(event);
+  helper.checkToRemoveHeader(savedImage);
   const filename = event.target.dataset.filename;
-  newimage = image.filter(file => file.name != filename);
-  image = newimage;
+  newImageList = savedImage.filter(file => file.name != filename);
+  image = newImageList;
+  savedImage = newImageList;
   storeInLocalStorage();
   event.target.remove();
 }
 
 function removeFilefromUploadList(event) {
-  const index = fileToBeUploadedList.findIndex(
-    file => file.name == event.target.id
-  );
-  image.splice(index, 1);
+  // image = [];
+  const newimage = image.filter(file => file.name != event.target.id);
+  image = newimage;
   const newFileList = fileToBeUploadedList.filter(
     file => file.name != event.target.id
   );
@@ -94,7 +100,7 @@ function previewImage() {
   fileToBeUploadedList.forEach(async file => {
     event.target.dataset.filename;
     const base64 = await toBase64(file);
-    helper.generatePreviewImage(base64);
+    helper.restoreImage(file, "preview", base64);
   });
   fileToBeUploadedList = [];
 }

@@ -10,7 +10,9 @@
   <head>
     <style>
       body {
-        background-color: violet;
+        /* background-color: darkslateblue; */
+        background-image: url("theme.jpg");
+        background-size: cover;
       }
       .onload {
         padding: 10px;
@@ -33,8 +35,8 @@
         padding: 20px;
         border-style: solid;
         border-color: black;
-        background-color: slateblue;
-        color: white;
+        background-color: lavender;
+        color: black;
       }
       /* .images {
         width: 200px;
@@ -47,7 +49,7 @@
   <body>
     <div class="container">
       <div class="uploadbox">
-        <h2 style="color:springgreen">UPLOAD BRUH!!!!</h2>
+        <h2 style="color:brown;text-align: center;">UPLOAD YOUR IMAGE</h2>
         <input
           type="file"
           name="files"
@@ -55,15 +57,16 @@
           multiple
           onchange="onFileSelect(event)"
         /><br /><br />
+        <button name="submit">Upload</button>
         <p class="header"></p>
         <ul class="preview"></ul>
         <div class="onload">
           <p class="removeHeader"></p>
         </div>
-        <button name="submit">Upload</button>
-        <div class="images">
+
+        <!-- <div class="images">
           <p class="uploadedHeader"></p>
-        </div>
+        </div> -->
       </div>
     </div>
     <script src="handler.js"></script>
