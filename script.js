@@ -11,7 +11,7 @@
 
 let fileToBeUploadedList = [];
 let image = [];
-let state;
+let state = [];
 let savedImage = [];
 
 function toBase64(file) {
@@ -47,6 +47,7 @@ function checkDuplicate(folder, file) {
 }
 
 function storeInLocalStorage() {
+  console.log(image);
   // displayImage.innerHTML = "";
   helper.clearFileName();
   try {
@@ -68,12 +69,17 @@ function restoreSession() {
 function restoreImageOnReload() {
   helper.displayHeader(state);
   state.forEach(file => {
-    helper.restoreImage(file, "loadimageonreload");
+    helper.restoreImage(file);
     savedImage.push(file);
   });
 }
 
 function removeImage(event) {
+  console.log(savedImage.length);
+  if (savedImage.length == 0) {
+    image.forEach(file => savedImage.push(file));
+  }
+
   helper.checkToRemoveHeader(savedImage);
   const filename = event.target.dataset.filename;
   newImageList = savedImage.filter(file => file.name != filename);
@@ -84,7 +90,6 @@ function removeImage(event) {
 }
 
 function removeFilefromUploadList(event) {
-  // image = [];
   const newimage = image.filter(file => file.name != event.target.id);
   image = newimage;
   const newFileList = fileToBeUploadedList.filter(
@@ -98,9 +103,11 @@ function removeFilefromUploadList(event) {
 function previewImage() {
   helper.clearPreviewBox();
   fileToBeUploadedList.forEach(async file => {
-    event.target.dataset.filename;
-    const base64 = await toBase64(file);
-    helper.restoreImage(file, "preview", base64);
+    imageobj = {
+      name: file.name,
+      base64: await toBase64(file)
+    };
+    helper.restoreImage(imageobj);
   });
   fileToBeUploadedList = [];
 }

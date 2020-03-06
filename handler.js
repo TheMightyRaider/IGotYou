@@ -28,15 +28,12 @@ const helper = (function() {
     button.disabled = false;
   }
 
-  function restoreImage(file, callingFunction, base64 = null) {
-    console.log(file.base64);
+  function restoreImage(file) {
     const img = document.createElement("img");
     img.dataset.filename = file.name;
-    img.src = file.base64 ? file.base64 : base64;
+    img.src = file.base64;
     displayImage.insertAdjacentElement("beforeend", img);
-    callingFunction == "loadimageonreload"
-      ? img.addEventListener("click", removeImage)
-      : null;
+    img.addEventListener("click", removeImage);
   }
 
   function displayHeader(state) {
