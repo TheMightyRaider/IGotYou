@@ -77,7 +77,7 @@ function restoreImageOnReload() {
 function removeImage(event) {
   console.log(savedImage.length);
   if (savedImage.length == 0) {
-    image.forEach(file => savedImage.push(file));
+    image.forEach(file => savedImage.push(file)); // storing the images from the localStorage.
   }
 
   helper.checkToRemoveHeader(savedImage);
