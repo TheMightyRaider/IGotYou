@@ -10,7 +10,7 @@
 */
 
 let fileToBeUploadedList = [];
-let image = [];
+let images = [];
 let state = [];
 let savedImage = [];
 
@@ -35,8 +35,8 @@ async function onFileSelect(event) {
         base64: objtobase64
       };
     }
-    const checkDuplicateinLocalStorage = checkDuplicate(image, file.name);
-    !checkDuplicateinLocalStorage ? image.push(imgobj) : null;
+    const checkDuplicateinLocalStorage = checkDuplicate(images, file.name);
+    !checkDuplicateinLocalStorage ? images.push(imgobj) : null;
   }
   helper.clearFileName();
   helper.displayName(fileToBeUploadedList);
@@ -47,13 +47,12 @@ function checkDuplicate(folder, file) {
 }
 
 function storeInLocalStorage() {
-  console.log(image);
   // displayImage.innerHTML = "";
   helper.clearFileName();
   try {
-    localStorage.setItem("FilesObject", JSON.stringify(image));
+    localStorage.setItem("FilesObject", JSON.stringify(images));
   } catch (err) {
-    helper.exceededStorageCapcity;
+    helper.displayStorageFull();
   }
 
   console.log("Stored in LS");
@@ -70,28 +69,33 @@ function restoreImageOnReload() {
   helper.displayHeader(state);
   state.forEach(file => {
     helper.restoreImage(file);
-    savedImage.push(file);
+    savedImage.push(file); // storing the images from the localStorage.
   });
 }
 
 function removeImage(event) {
-  console.log(savedImage.length);
   if (savedImage.length == 0) {
-    image.forEach(file => savedImage.push(file)); // storing the images from the localStorage.
+    images.forEach(file => savedImage.push(file));
   }
-
-  helper.checkToRemoveHeader(savedImage);
+  if (
+    savedImage.length == 1
+    // Could have used image array
+    // !event.target.nextSibling &&
+    // event.target.previousSibling.nodeType == Node.TEXT_NODE
+  ) {
+    helper.clearHeader();
+  }
   const filename = event.target.dataset.filename;
   newImageList = savedImage.filter(file => file.name != filename);
-  image = newImageList;
+  images = newImageList;
   savedImage = newImageList;
   storeInLocalStorage();
   event.target.remove();
 }
 
 function removeFilefromUploadList(event) {
-  const newimage = image.filter(file => file.name != event.target.id);
-  image = newimage;
+  const newimage = images.filter(file => file.name != event.target.id);
+  images = newimage;
   const newFileList = fileToBeUploadedList.filter(
     file => file.name != event.target.id
   );

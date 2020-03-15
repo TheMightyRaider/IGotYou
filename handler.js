@@ -1,4 +1,5 @@
 const helper = (function() {
+  const input = document.querySelector("input[type='file']");
   const button = document.querySelector("button");
   const preview = document.querySelector("ul");
   const header = document.querySelector(".header");
@@ -42,16 +43,8 @@ const helper = (function() {
       : null;
   }
 
-  function checkToRemoveHeader(savedImage) {
-    console.log(image);
-    if (
-      savedImage.length == 1
-      // Could have used image array
-      // !event.target.nextSibling &&
-      // event.target.previousSibling.nodeType == Node.TEXT_NODE
-    ) {
-      removeHeader.innerHTML = "";
-    }
+  function clearHeader() {
+    removeHeader.innerHTML = "";
   }
 
   function clearPreviewBox() {
@@ -64,22 +57,23 @@ const helper = (function() {
   }
 
   function addListener() {
+    input.addEventListener("change", onFileSelect);
     button.addEventListener("click", storeInLocalStorage);
     button.addEventListener("click", previewImage);
     preview.addEventListener("click", removeFilefromUploadList);
   }
 
-  function exceededStorageCapcity() {
+  function displayStorageFull() {
     displayImage.innerHTML = "Upload Failed! Storage Exceed!";
   }
   return {
     clearFileName,
     displayName,
     restoreImage,
-    checkToRemoveHeader,
+    clearHeader,
     displayHeader,
     clearPreviewBox,
     addListener,
-    exceededStorageCapcity
+    displayStorageFull
   };
 })();
