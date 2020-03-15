@@ -1,21 +1,29 @@
+<!-- 
+    TODO:
+        Setup a Upload Input
+        Preview Box- Displaying the uploaded Images
+        OnLoad Box- Displaying the Images stored in the LocalStorage
+
+-->
+
 <html>
   <head>
     <style>
       body {
-        background-color: aquamarine;
+        /* background-color: darkslateblue; */
+        background-image: url("theme.jpg");
+        background-size: cover;
       }
-      .image {
-        width: 150px;
+      .onload {
         padding: 10px;
       }
-      .dropbox {
-        width: 350px;
-        height: 150px;
+      img {
+        width: 200px;
+        height: 200px;
+        margin: 10px;
+        /* padding: 10px; */
         border-style: solid;
-        margin: 50px;
-        text-align: center;
-        padding: 10px;
-        background-color: rebeccapurple;
+        border-color: black;
       }
       .container {
         height: 100%;
@@ -23,46 +31,44 @@
         align-items: center;
         justify-content: center;
       }
-      .main {
-        width: 500px;
-        height: 500px;
+      .uploadbox {
         padding: 20px;
-        margin: 10px;
-        background-color: purple;
         border-style: solid;
+        border-color: black;
+        background-color: lavender;
+        color: black;
       }
-      .fileName {
-        color: white;
-      }
-      .previewHeader {
-        color: white;
-      }
+      /* .images {
+        width: 200px;
+        height: 200px;
+        border-style: solid;
+        border-color: black;
+      } */
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="main">
+      <div class="uploadbox">
+        <h2 style="color:brown;text-align: center;">UPLOAD YOUR IMAGE</h2>
         <input
           type="file"
-          name="uploadFile"
-          accept=".png,.jpg"
+          name="files"
+          accept=".jpg,.png"
           multiple
-          onchange="displayitem()"
         /><br /><br />
-        <div class="fileName">
-          <p class="header"></p>
-        </div>
         <button name="submit">Upload</button>
-        <div class="dropbox">
-          <p>DROP IT HERE!</p>
+        <p class="header"></p>
+        <ul class="preview"></ul>
+        <div class="onload">
+          <p class="removeHeader"></p>
         </div>
-        <div class="preview">
-          <p class="previewHeader"></p>
-        </div>
+
+        <!-- <div class="images">
+          <p class="uploadedHeader"></p>
+        </div> -->
       </div>
     </div>
-
-    <script src="lib.js"></script>
+    <script src="handler.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
