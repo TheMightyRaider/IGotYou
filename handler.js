@@ -15,7 +15,6 @@ const helper = (function() {
   }
 
   function displayName(fileToBeUploadedList) {
-    console.log("working");
     fileToBeUploadedList.length > 0
       ? (header.innerHTML = "<b>File Selected</b>")
       : null;
