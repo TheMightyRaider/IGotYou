@@ -25,7 +25,9 @@ const helper = (function() {
         `;
       preview.innerHTML += html;
     });
-    button.disabled = false;
+    fileToBeUploadedList.length > 0
+      ? (button.disabled = false)
+      : (button.disabled = true);
   }
 
   function restoreImage(file) {
