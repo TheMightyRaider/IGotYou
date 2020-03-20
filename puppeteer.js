@@ -11,24 +11,25 @@ try {
       waitUntil: "domcontentloaded"
     });
     await page.waitForSelector('input[type="file"]');
-    await wait(1000);
+    await wait(2000);
 
     // Returns a Element Handler for the selector;
 
-    await page.evaluate(() =>
-      document.querySelector("input[type='file']").click()
+    const elementHandle = await page.$('input[type="file"]');
+    await elementHandle.uploadFile("/home/sanjay/Pictures/discord.jpg");
+    elementHandle.evaluate(element => {
+      const event = new Event("change");
+      element.dispatchEvent(event);
+    });
+
+    await wait(4000);
+
+    const fileHeader = await page.$("#header");
+    fileSelectedHeader = await fileHeader.evaluate(
+      element => element.innerText
     );
 
-    // const [file] = await Promise.all([
-    //   page.waitForFileChooser(),
-    //   page.evaluate(_ => document.querySelector('input[type="file"]').click())
-    // ]);
-    // await file.accept(["/home/sanjay/Pictures/discord.jpg"]);
-
-    // const elementHandle = await page.$('input[type="file"]');
-    // await elementHandle.uploadFile("/home/sanjay/Pictures/discord.jpg");
-
-    await wait(7000);
+    console.log(fileSelectedHeader);
 
     await page.waitForSelector("#b1");
     await page.evaluate(_ => document.querySelector("#b1").click());
