@@ -1,14 +1,14 @@
 const puppeteer = require("puppeteer");
 
-const app = process.env.URL || "http://127.0.0.1:5500/index.html";
+const app = "http:/localhost:5000";
 let browser;
 let page;
 let fileInput;
 
 beforeAll(async () => {
   browser = await puppeteer.launch({
-    headless: false,
-    slowMo: 100
+    // headless: false
+    // slowMo: 100
   });
   page = await browser.newPage();
   await page.goto(app, {
@@ -18,16 +18,13 @@ beforeAll(async () => {
   fileInput = await page.$('input[name="files"]');
 });
 
-describe("Checking for File Input", () => {
+describe("Check if the file selected are displayed and removable before file Upload", () => {
   test("Check if the file input exists", async () => {
     expect(fileInput).toBeTruthy();
   });
 
   test("Check if the file header is displayed", async () => {
-    await fileInput.uploadFile(
-      "/home/sanjay/Pictures/discord.jpg",
-      "/home/sanjay/Pictures/landscape-mountains-firewatch-silhouette-wallpaper.png"
-    );
+    await fileInput.uploadFile("beautiful.png", "theme.jpg");
 
     fileInput.evaluate(element => {
       const event = new Event("change");
@@ -68,7 +65,7 @@ describe("Checking for File Input", () => {
   });
 });
 
-describe("Uploading a file, After the Files have been chosen", async () => {
+describe("Uploading a file, After the Files have been chosen", () => {
   test("Checking if the upload is disabled when no file is selected", async () => {
     await page.waitForSelector("#b1");
     const uploadButton = await page.$("#b1");
@@ -80,10 +77,7 @@ describe("Uploading a file, After the Files have been chosen", async () => {
     await page.waitForSelector('input[type="file"]');
     const inputFile = await page.$('input[type="file"]');
 
-    await inputFile.uploadFile(
-      "/home/sanjay/Pictures/discord.jpg",
-      "/home/sanjay/Pictures/landscape-mountains-firewatch-silhouette-wallpaper.png"
-    );
+    await inputFile.uploadFile("beautiful.png", "theme.jpg");
 
     // Triggering the change event
 
@@ -129,13 +123,10 @@ describe("Uploading a file, After the Files have been chosen", async () => {
   });
 }, 10000);
 
-describe("After Upload but before Refresh, Test for Removing a Image", async () => {
+describe("After Upload but before Refresh, Test for Removing a Image", () => {
   // Uploading the Files
   test("Check if the image is removed on click", async () => {
-    await fileInput.uploadFile(
-      "/home/sanjay/Pictures/discord.jpg",
-      "/home/sanjay/Pictures/landscape-mountains-firewatch-silhouette-wallpaper.png"
-    );
+    await fileInput.uploadFile("beautiful.png", "theme.jpg");
 
     fileInput.evaluate(element => {
       let event = new Event("change");
@@ -178,12 +169,15 @@ describe("After Upload but before Refresh, Test for Removing a Image", async () 
   });
 });
 
-describe("After Refresh, Test to remove image", async () => {
+describe("After Refresh, Test to remove image", () => {
+  beforeEach(() => {
+    jest.setTimeout(10000);
+  });
   test("Check if the Refresh Header exists after refresh", async () => {
     await page.waitForSelector('input[type="file"]');
     const inputFile = await page.$('input[type="file"]');
 
-    await inputFile.uploadFile("/home/sanjay/Pictures/discord.jpg");
+    await inputFile.uploadFile("beautiful.png");
 
     inputFile.evaluate(element => {
       let event = new Event("change");

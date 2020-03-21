@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "serve ."
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,8 @@
     "jest-puppeteer": "^4.4.0",
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
-    "puppeteer": "^2.1.1"
+    "puppeteer": "^2.1.1",
+    "serve": "^11.3.0"
   },
   "husky": {
     "hooks": {
