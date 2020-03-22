@@ -15,7 +15,6 @@ const helper = (function() {
   }
 
   function displayName(fileToBeUploadedList) {
-    console.log("working");
     fileToBeUploadedList.length > 0
       ? (header.innerHTML = "<b>File Selected</b>")
       : null;
@@ -26,7 +25,9 @@ const helper = (function() {
         `;
       preview.innerHTML += html;
     });
-    button.disabled = false;
+    fileToBeUploadedList.length > 0
+      ? (button.disabled = false)
+      : (button.disabled = true);
   }
 
   function restoreImage(file) {

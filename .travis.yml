@@ -1,0 +1,24 @@
+language: node_js
+
+dist: bionic
+
+addons:
+  chrome: stable
+
+cache:
+  directories:
+    - node_modules
+
+node_js:
+  - 12.16.1
+
+branches:
+  only:
+    - level3
+
+before_install:
+  -  # start your web application and listen on `localhost`
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=5500 http://localhost &
+
+before_script:
+  - npm start &
