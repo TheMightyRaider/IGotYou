@@ -12,10 +12,6 @@ cache:
 node_js:
   - 12.16.1
 
-branches:
-  only:
-    - level3
-
 before_install:
   -  # start your web application and listen on `localhost`
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=5500 http://localhost &
