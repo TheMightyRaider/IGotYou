@@ -1,51 +1,51 @@
 const helper = (function() {
-  const input = document.querySelector("input[type='file']");
-  const button = document.querySelector("button");
-  const preview = document.querySelector("ul");
-  const header = document.querySelector(".header");
-  const displayImage = document.querySelector(".onload");
-  const removeHeader = document.querySelector(".removeHeader");
-  button.disabled = true;
+  const input = $("input[type='file']");
+  const button = $("button");
+  const preview = $("ul");
+  const header = $(".header");
+  const displayImage = $(".onload");
+  const removeHeader = $(".removeHeader");
+  button.prop("disabled", true);
 
   function clearFileName() {
-    document.querySelector("input[name='files']").value = "";
-    document.querySelector(".header").innerHTML = "";
-    document.querySelector("ul").innerHTML = "";
+    $('input[name="files"]').val("");
+    $(".header").empty();
+    $("ul").empty();
     return;
   }
 
   function displayName(fileToBeUploadedList) {
     fileToBeUploadedList.length > 0
-      ? (header.innerHTML = "<b>File Selected</b>")
+      ? header.html("<b>File Selected</b>")
       : null;
     fileToBeUploadedList.forEach(file => {
       html = `
             <li class='fileName'>${file.name}<button class='remove' id='${file.name}'>Remove</button></li>
             <br>
         `;
-      preview.innerHTML += html;
+      preview.append(html);
     });
     fileToBeUploadedList.length > 0
-      ? (button.disabled = false)
-      : (button.disabled = true);
+      ? button.prop("disabled", false)
+      : button.prop("disabled", true);
   }
 
   function restoreImage(file) {
     const img = document.createElement("img");
     img.dataset.filename = file.name;
     img.src = file.base64;
-    displayImage.insertAdjacentElement("beforeend", img);
-    img.addEventListener("click", removeImage);
+    displayImage.append(img);
+    $(document).on("click", "img", removeImage);
   }
 
   function displayHeader(state) {
     state.length > 0
-      ? (removeHeader.innerHTML = "<b>Click the Image to remove it!</b>")
+      ? removeHeader.html("<b>Click the Image to remove it!</b>")
       : null;
   }
 
   function clearHeader() {
-    removeHeader.innerHTML = "";
+    removeHeader.empty();
   }
 
   function clearPreviewBox() {
@@ -53,20 +53,21 @@ const helper = (function() {
       .querySelector(".onload")
       .querySelectorAll("img")
       .forEach(item => item.remove());
-    removeHeader.innerHTML = "Uploaded!";
-    button.disabled = true;
+    removeHeader.html("Uploaded!");
+    button.prop("disabled", true);
   }
 
   function addListener() {
-    input.addEventListener("change", onFileSelect);
-    button.addEventListener("click", storeInLocalStorage);
-    button.addEventListener("click", previewImage);
-    preview.addEventListener("click", removeFilefromUploadList);
+    input.change(onFileSelect);
+    button.click(storeInLocalStorage);
+    button.click(previewImage);
+    preview.click(removeFilefromUploadList);
   }
 
   function displayStorageFull() {
-    displayImage.innerHTML = "Upload Failed! Storage Exceed!";
+    displayImage.text("Upload Failed! Storage Exceed!");
   }
+
   return {
     clearFileName,
     displayName,
